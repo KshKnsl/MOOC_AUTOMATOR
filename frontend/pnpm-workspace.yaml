@@ -1,0 +1,5 @@
+allowBuilds:
+  '@astryxdesign/core': set this to true or false
+minimumReleaseAgeExclude:
+  - '@astryxdesign/core@0.4.2'
+  - '@astryxdesign/theme-neutral@0.4.2'

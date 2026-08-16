@@ -1,0 +1,34 @@
+[
+  {
+    "id": "noc26_hs188",
+    "title": "HR Analytics",
+    "url": "https://onlinecourses.nptel.ac.in/noc26_hs188",
+    "nc_code": "NPTEL",
+    "start_date": "2026-07-19T18:30:00.000000Z",
+    "end_date": "2026-10-08T18:30:00.000000Z"
+  },
+  {
+    "id": "noc26_cs95",
+    "title": "Fundamentals of Generative AI and Large Language Models: Theory and Practice",
+    "url": "https://onlinecourses.nptel.ac.in/noc26_cs95",
+    "nc_code": "NPTEL",
+    "start_date": "2026-07-19T18:30:00.000000Z",
+    "end_date": "2026-10-08T18:30:00.000000Z"
+  },
+  {
+    "id": "noc26_cs181",
+    "title": "Deep Learning for Natural Language Processing",
+    "url": "https://onlinecourses.nptel.ac.in/noc26_cs181",
+    "nc_code": "NPTEL",
+    "start_date": "2026-07-19T18:30:00.000000Z",
+    "end_date": "2026-10-08T18:30:00.000000Z"
+  },
+  {
+    "id": "noc26_cs104",
+    "title": "Generative AI for Computer Vision",
+    "url": "https://onlinecourses.nptel.ac.in/noc26_cs104",
+    "nc_code": "NPTEL",
+    "start_date": "2026-07-19T18:30:00.000000Z",
+    "end_date": "2026-10-08T18:30:00.000000Z"
+  }
+]

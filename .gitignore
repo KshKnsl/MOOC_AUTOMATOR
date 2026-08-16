@@ -1,0 +1,7 @@
+*.pkl
+.venv
+.claude
+__pycache__/
+.env
+extracted_quizzes
+cookies.json
