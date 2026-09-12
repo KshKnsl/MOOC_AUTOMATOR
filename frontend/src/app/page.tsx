@@ -88,7 +88,7 @@ interface Course {
   id: string;
   title: string;
   url: string;
-  nc_code: string;
+  nc_code?: string;
   start_date?: string;
   end_date?: string;
 }
@@ -306,17 +306,19 @@ function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refr
     <Card width="100%" height="100%" padding={0}>
       <Layout
         height="fill"
+        padding={4}
+        defaultHasDividers
         header={
-          <LayoutHeader hasDivider padding={4}>
+          <LayoutHeader>
             <HStack gap={3} hAlign="between" vAlign="center">
               <TextInput
                 label="Search files"
                 isLabelHidden
                 value={query}
                 onChange={setQuery}
-                placeholder="Search files…"
+                placeholder="Search files..."
                 startIcon={<Icon icon="search" />}
-                hasClear
+                hasClear={true}
                 width="100%"
               />
               <Button
@@ -331,8 +333,8 @@ function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refr
           </LayoutHeader>
         }
         start={
-          <LayoutPanel width={340} hasDivider>
-            <VStack gap={3} padding={4}>
+          <LayoutPanel width={340} hasDivider padding={4}>
+            <VStack gap={3}>
               {loading ? (
                 <VStack gap={2}>
                   <Skeleton width="70%" height={16} />
@@ -359,7 +361,7 @@ function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refr
                     isCompact
                     icon={<Icon icon="search" size="lg" />}
                     title="No matching files"
-                    description={`Nothing matched “${query}”.`}
+                    description={`Nothing matched "${query}".`}
                   />
                 ) : (
                   <List density="compact">
@@ -396,8 +398,10 @@ function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refr
             {previewFile && previewUrl ? (
               <Layout
                 height="fill"
+                padding={4}
+                defaultHasDividers
                 header={
-                  <LayoutHeader hasDivider padding={4}>
+                  <LayoutHeader>
                     <HStack gap={3} hAlign="between" vAlign="center">
                       <VStack gap={0.5}>
                         <Heading level={3} maxLines={1}>
@@ -505,7 +509,7 @@ export default function NPTELDashboard() {
       const res = await fetch(`${API_BASE}/status`);
       if (!res.ok) throw new Error("unavailable");
     } catch {
-      setActionMsg({ text: "API is unavailable. Restart the Next.js app with npm run dev.", type: "error" });
+      setActionMsg({ text: "API is unavailable. Restart the app with pnpm dev.", type: "error" });
     }
   };
 
@@ -848,7 +852,7 @@ export default function NPTELDashboard() {
     <AppShell
       height="fill"
       variant="elevated"
-      contentPadding={4}
+      contentPadding={0}
       banner={
         actionMsg ? (
           <Banner
@@ -871,7 +875,7 @@ export default function NPTELDashboard() {
             />
           }
           footer={
-            <VStack gap={2} padding={3}>
+            <VStack gap={2} padding={4}>
               <HStack gap={2} vAlign="center">
                 <StatusDot
                   variant={status?.cookies_loaded ? "success" : "error"}
@@ -935,8 +939,10 @@ export default function NPTELDashboard() {
       {activeTab === "solver" && (
         <Layout
           height="fill"
+          padding={4}
+          defaultHasDividers
           header={
-            <LayoutHeader hasDivider>
+            <LayoutHeader>
               <HStack gap={3} hAlign="between" vAlign="center">
                 <VStack gap={0.5}>
                   <Heading level={1}>{pageCopy.solver.title}</Heading>
@@ -957,8 +963,8 @@ export default function NPTELDashboard() {
             </LayoutHeader>
           }
           start={
-            <LayoutPanel width={320} hasDivider>
-              <VStack gap={3} padding={3}>
+            <LayoutPanel width={320} hasDivider padding={4}>
+              <VStack gap={3}>
                 <HStack gap={2} hAlign="between" vAlign="center">
                   <Text type="label" color="secondary">
                     Assignments
@@ -1117,8 +1123,10 @@ export default function NPTELDashboard() {
       {activeTab === "courses" && (
         <Layout
           height="fill"
+          padding={4}
+          defaultHasDividers
           header={
-            <LayoutHeader hasDivider padding={4}>
+            <LayoutHeader>
               <HStack gap={3} hAlign="between" vAlign="center">
                 <VStack gap={0.5}>
                   <Heading level={1}>{pageCopy.courses.title}</Heading>
@@ -1144,7 +1152,7 @@ export default function NPTELDashboard() {
             </LayoutHeader>
           }
           content={
-            <LayoutContent padding={6}>
+            <LayoutContent>
               {courses.length === 0 ? (
                 <Center height="100%">
                   <EmptyState
@@ -1157,7 +1165,7 @@ export default function NPTELDashboard() {
               ) : (
                 <Grid columns={{ minWidth: 260, max: 4 }} gap={4} width="100%">
                   {courses.map((course) => (
-                    <Card key={course.id} padding={5}>
+                    <Card key={course.id} padding={4}>
                       <VStack gap={4}>
                         <VStack gap={2}>
                           <Badge label={course.nc_code || "NPTEL"} />
@@ -1209,8 +1217,10 @@ export default function NPTELDashboard() {
       {activeTab === "quizzes" && (
         <Layout
           height="fill"
+          padding={4}
+          defaultHasDividers
           header={
-            <LayoutHeader hasDivider>
+            <LayoutHeader>
               <HStack gap={3} hAlign="between" vAlign="center">
                 <VStack gap={0.5}>
                   <Heading level={1}>{pageCopy.quizzes.title}</Heading>
@@ -1242,8 +1252,8 @@ export default function NPTELDashboard() {
             </LayoutHeader>
           }
           start={
-            <LayoutPanel width={300} hasDivider>
-              <VStack gap={3} padding={3}>
+            <LayoutPanel width={300} hasDivider padding={4}>
+              <VStack gap={3}>
                 <Text type="label" color="secondary">
                   Quizzes ({quizList.length})
                 </Text>
@@ -1321,8 +1331,10 @@ export default function NPTELDashboard() {
       {activeTab === "notes" && (
         <Layout
           height="fill"
+          padding={4}
+          defaultHasDividers
           header={
-            <LayoutHeader hasDivider>
+            <LayoutHeader>
               <HStack gap={3} hAlign="between" vAlign="center">
                 <VStack gap={0.5}>
                   <Heading level={1}>{pageCopy.notes.title}</Heading>
@@ -1350,7 +1362,7 @@ export default function NPTELDashboard() {
             </LayoutHeader>
           }
           content={
-            <LayoutContent>
+            <LayoutContent padding={0}>
               <FileManagerPanel courseId={notesCourseId} refreshKey={filesRefreshKey} />
             </LayoutContent>
           }
@@ -1359,6 +1371,8 @@ export default function NPTELDashboard() {
 
       <Dialog isOpen={showSettings} onOpenChange={setShowSettings} purpose="form" width={560}>
         <Layout
+          padding={4}
+          defaultHasDividers
           header={
             <DialogHeader
               title="Connection settings"
