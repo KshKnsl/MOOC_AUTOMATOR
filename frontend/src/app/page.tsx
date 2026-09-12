@@ -79,66 +79,11 @@ import {
   saveQuizzesLocal,
   writeBlobToDirectory,
 } from "@/lib/client-store";
+import type { Assignment, Course, FileNode } from "@/lib/types";
 
 const API_BASE = "/api";
 
 type TabId = "solver" | "courses" | "quizzes" | "notes";
-
-interface Course {
-  id: string;
-  title: string;
-  url: string;
-  nc_code?: string;
-  start_date?: string;
-  end_date?: string;
-}
-interface Choice {
-  choice_id: string;
-  index: number;
-  text: string;
-  score?: number;
-}
-interface Question {
-  q_num: number;
-  order: number;
-  question_block_id: string;
-  question_text: string;
-  input_type: string;
-  points: string;
-  choices: Choice[];
-  correct_choice_ids: string[];
-  correct_choice_texts: string[];
-  has_revealed_answer: boolean;
-  student_is_answered: boolean;
-}
-interface Assignment {
-  course_id: string;
-  course_title?: string;
-  unit_id: number | string;
-  assessment_id: number | string;
-  title: string;
-  url: string;
-  due_date: string | null;
-  is_submitted: boolean;
-  is_expired?: boolean;
-  xsrf_token: string;
-  total_questions: number;
-  questions: Question[];
-}
-interface Quiz {
-  course_id: string;
-  unit_id: number;
-  assessment_id: number;
-  title: string;
-  total_questions: number;
-}
-interface FNode {
-  type: "file" | "folder";
-  name: string;
-  size?: number;
-  path?: string;
-  children?: FNode[];
-}
 
 interface GeminiSolution {
   q_num?: number;
@@ -156,7 +101,7 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1048576).toFixed(2)} MB`;
 }
 
-function countFiles(nodes: FNode[]): number {
+function countFiles(nodes: FileNode[]): number {
   return nodes.reduce(
     (acc, n) => (n.type === "file" ? acc + 1 : acc + countFiles(n.children || [])),
     0,
@@ -185,8 +130,8 @@ function sourceColor(source?: string): "blue" | "green" | "orange" | "gray" {
 }
 
 function toTreeItems(
-  nodes: FNode[],
-  onOpenFile: (file: FNode) => void,
+  nodes: FileNode[],
+  onOpenFile: (file: FileNode) => void,
   selectedPath?: string,
   prefix = "",
 ): TreeListItemData[] {
@@ -223,8 +168,8 @@ function toTreeItems(
   });
 }
 
-function flattenFiles(nodes: FNode[], prefix = ""): FNode[] {
-  const files: FNode[] = [];
+function flattenFiles(nodes: FileNode[], prefix = ""): FileNode[] {
+  const files: FileNode[] = [];
   for (const node of nodes) {
     if (node.type === "file") {
       files.push({ ...node, name: (prefix ? `${prefix} › ` : "") + node.name });
@@ -236,11 +181,11 @@ function flattenFiles(nodes: FNode[], prefix = ""): FNode[] {
 }
 
 function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refreshKey?: number }) {
-  const [tree, setTree] = useState<FNode[]>([]);
+  const [tree, setTree] = useState<FileNode[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [query, setQuery] = useState("");
-  const [previewFile, setPreviewFile] = useState<FNode | null>(null);
+  const [previewFile, setPreviewFile] = useState<FileNode | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const fetchTree = useCallback(async (cid: string) => {
@@ -290,7 +235,7 @@ function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refr
   const totalFiles = countFiles(tree);
   const folders = tree.filter((node) => node.type === "folder").length;
 
-  const openFile = (file: FNode) => {
+  const openFile = (file: FileNode) => {
     if (file.path && file.name.toLowerCase().endsWith(".pdf")) {
       setPreviewFile(file);
     }
@@ -477,8 +422,8 @@ export default function NPTELDashboard() {
   const [confirmCompleteAll, setConfirmCompleteAll] = useState(false);
   const [solutionsMarkdown, setSolutionsMarkdown] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
-  const [quizList, setQuizList] = useState<Quiz[]>([]);
-  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [quizList, setQuizList] = useState<Assignment[]>([]);
+  const [selectedQuiz, setSelectedQuiz] = useState<Assignment | null>(null);
   const [notesCourseId, setNotesCourseId] = useState("");
   const [filesRefreshKey, setFilesRefreshKey] = useState(0);
 
@@ -666,8 +611,8 @@ export default function NPTELDashboard() {
   const fetchQuizData = async (courseId: string) => {
     const data = getQuizzesLocal(courseId);
     setSolutionsMarkdown(data.solutions_markdown || "");
-    setQuizList((data.quizzes || []) as Quiz[]);
-    if (data.quizzes?.length > 0) setSelectedQuiz(data.quizzes[0] as Quiz);
+    setQuizList(data.quizzes || []);
+    if (data.quizzes?.length > 0) setSelectedQuiz(data.quizzes[0]);
     else setSelectedQuiz(null);
   };
 
