@@ -14,6 +14,8 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+On Vercel, set **Root Directory** to `frontend`, **Framework** to Next.js, and leave **Output Directory** empty (not `public`).
+
 ## Setup
 
 1. Log in at [swayam.gov.in](https://swayam.gov.in).
