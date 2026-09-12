@@ -9,6 +9,7 @@ import shutil
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -113,23 +114,52 @@ def clean_text_string(raw_text):
     return clean
 
 
-def download_drive_file(file_id, dest_path):
-    """Download direct PDF file from Google Drive file_id"""
+def get_drive_file_name(file_id):
+    """Retrieve the actual filename of a Google Drive file via Content-Disposition header."""
+    dl_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    try:
+        req = urllib.request.Request(dl_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            cd = resp.headers.get("Content-Disposition", "")
+            # e.g. attachment; filename="Lecture_01.pdf"
+            m = re.search(r'filename[^;=\n]*=[\'"]?([^\'"\n;]+)', cd)
+            if m:
+                return m.group(1).strip().strip('"\'')
+    except Exception:
+        pass
+    return None
+
+
+def download_drive_file(file_id, dest_dir, fallback_name="file"):
+    """Download a Google Drive file using its actual filename.
+
+    Returns the destination path if successful, otherwise None.
+    """
     dl_url = f"https://drive.google.com/uc?export=download&id={file_id}"
     try:
         req = urllib.request.Request(dl_url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=30) as resp:
+            # Resolve the actual filename from the response headers
+            cd = resp.headers.get("Content-Disposition", "")
+            m = re.search(r'filename[^;=\n]*=[\'"]?([^\'"\n;]+)', cd)
+            if m:
+                actual_name = sanitize_filename(m.group(1).strip().strip('"\''))
+            else:
+                actual_name = sanitize_filename(fallback_name)
+            if not actual_name.lower().endswith(".pdf"):
+                actual_name += ".pdf"
+            dest_path = os.path.join(dest_dir, actual_name)
             content = resp.read()
             if len(content) > 100:
-                os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                os.makedirs(dest_dir, exist_ok=True)
                 with open(dest_path, "wb") as f:
                     f.write(content)
                 size_mb = len(content) / (1024 * 1024)
-                print(f"      ✅ Downloaded PDF ({size_mb:.2f} MB) -> {os.path.basename(dest_path)}")
-                return True
+                print(f"      ✅ Downloaded PDF ({size_mb:.2f} MB) -> {actual_name}")
+                return dest_path
     except Exception as e:
         print(f"      ⚠️ Note download skip ({file_id}): {e}")
-    return False
+    return None
 
 
 def extract_drive_folder_file_ids(folder_url):
@@ -463,7 +493,7 @@ class NPTELAutomator:
             print(f"❌ Error fetching courses: {e}")
             return []
 
-    async def fetch_and_download_course_notes(self, course_id):
+    async def fetch_and_download_course_notes(self, course_id, target_units=None):
         """Option 3: Extract unit-wise PDF notes & Google Drive lecture material download links for a course"""
         c_id = course_id.rstrip("/").split("/")[-1] if "/" in course_id else course_id
         print(f"\n📑 Extracting & Downloading unit-wise PDF notes for {c_id}...")
@@ -483,13 +513,38 @@ class NPTELAutomator:
             lessons = payload.get("lessons", {})
 
             course_notes_dir = os.path.join(self.output_dir, sanitize_filename(c_id))
+            
+            # Clear old notes if downloading all units for the course
+            if not target_units:
+                import shutil
+                if os.path.exists(course_notes_dir):
+                    shutil.rmtree(course_notes_dir)
             os.makedirs(course_notes_dir, exist_ok=True)
 
+            # Load existing notes if we are only downloading specific units
             discovered_notes = []
+            index_path = os.path.join(course_notes_dir, "notes_index.json")
+            if target_units and os.path.exists(index_path):
+                try:
+                    with open(index_path, "r", encoding="utf-8") as f:
+                        discovered_notes = json.load(f)
+                except Exception:
+                    pass
+
+            # Filter out existing notes from the target units so they get replaced
+            if target_units:
+                discovered_notes = [n for n in discovered_notes if str(n.get("unit_id")) not in [str(u) for u in target_units]]
+
             downloaded_pdf_count = 0
+            cleared_units = set()
 
             for lkey, lval in lessons.items():
                 uid = lval.get("unit_id")
+                
+                # Skip if a specific unit is targeted and this is not it
+                if target_units and str(uid) not in [str(u) for u in target_units]:
+                    continue
+                    
                 lid = lval.get("lesson_id")
                 ltitle = lval.get("title", "")
 
@@ -497,6 +552,14 @@ class NPTELAutomator:
                 unit_title = unit_obj.get("title") or f"Unit_{uid}"
 
                 unit_dir = os.path.join(course_notes_dir, sanitize_filename(unit_title))
+                
+                # Clear specific unit directory before downloading new files for it
+                if target_units and uid not in cleared_units:
+                    import shutil
+                    if os.path.exists(unit_dir):
+                        shutil.rmtree(unit_dir)
+                    cleared_units.add(uid)
+                    
                 os.makedirs(unit_dir, exist_ok=True)
 
                 lok, ltext, _ = await self.http_get(
@@ -545,9 +608,8 @@ class NPTELAutomator:
                                     m = re.search(r"/file/d/([^/\?]+)", clean_url)
                                     if m:
                                         fid = m.group(1)
-                                        pdf_name = f"{sanitize_filename(ltitle)}.pdf"
-                                        dest = os.path.join(unit_dir, pdf_name)
-                                        if download_drive_file(fid, dest):
+                                        dest = download_drive_file(fid, unit_dir, fallback_name=sanitize_filename(ltitle))
+                                        if dest:
                                             downloaded_pdf_count += 1
                                             note_item["local_path"] = dest
 
@@ -555,16 +617,20 @@ class NPTELAutomator:
                                 elif "drive.google.com/drive/folders/" in clean_url:
                                     f_ids = extract_drive_folder_file_ids(clean_url)
                                     for idx, fid in enumerate(f_ids, 1):
-                                        pdf_name = f"{sanitize_filename(ltitle)}_part{idx}.pdf"
-                                        dest = os.path.join(unit_dir, pdf_name)
-                                        if download_drive_file(fid, dest):
+                                        dest = download_drive_file(fid, unit_dir, fallback_name=f"{sanitize_filename(ltitle)}_part{idx}")
+                                        if dest:
                                             downloaded_pdf_count += 1
                                             note_item["local_path"] = dest
 
                                 # 3. Direct PDF Download
                                 elif clean_url.lower().endswith(".pdf"):
-                                    pdf_name = f"{sanitize_filename(ltitle)}.pdf"
-                                    dest = os.path.join(unit_dir, pdf_name)
+                                    # Use the actual filename from the URL path
+                                    url_filename = urllib.parse.unquote(clean_url.rstrip("/").split("/")[-1].split("?")[0])
+                                    if not url_filename.lower().endswith(".pdf"):
+                                        url_filename = f"{sanitize_filename(ltitle)}.pdf"
+                                    else:
+                                        url_filename = sanitize_filename(url_filename)
+                                    dest = os.path.join(unit_dir, url_filename)
                                     try:
                                         pok, _, pdf_bytes = await self.http_get(clean_url)
                                         if pok and pdf_bytes:
@@ -572,7 +638,7 @@ class NPTELAutomator:
                                                 pf.write(pdf_bytes)
                                             downloaded_pdf_count += 1
                                             note_item["local_path"] = dest
-                                            print(f"      ✅ Saved direct PDF -> {os.path.basename(dest)}")
+                                            print(f"      ✅ Saved direct PDF -> {url_filename}")
                                     except Exception:
                                         pass
 
@@ -1088,12 +1154,82 @@ async def option3_download_all_notes(automator, max_parallel=4):
         print("❌ No active courses available to process.")
         return
 
-    course_ids = [c["id"] for c in courses if "id" in c]
-    print(f"\n⚡ Extracting PDF notes for {len(course_ids)} courses in parallel using {max_parallel} workers...")
+    print("\nSelect a course to download notes for:")
+    for idx, c in enumerate(courses, 1):
+        print(f"{idx}. {c.get('title', c['id'])}")
+    print("A. All Courses (All Chapters)")
+    print("C. Cancel")
+
+    choice = input("\nEnter your choice: ").strip().lower()
+    
+    if choice == 'c':
+        return
+        
+    course_ids_to_process = []
+    target_units = None
+
+    if choice == 'a':
+        course_ids_to_process = [c["id"] for c in courses if "id" in c]
+    else:
+        try:
+            idx = int(choice) - 1
+            if 0 <= idx < len(courses):
+                selected_course = courses[idx]
+                course_ids_to_process = [selected_course["id"]]
+                
+                # Now ask for chapters
+                print(f"\nFetching chapters for {selected_course.get('title', selected_course['id'])}...")
+                c_id = selected_course["id"].rstrip("/").split("/")[-1] if "/" in selected_course["id"] else selected_course["id"]
+                ok, text, _ = await automator.http_get(
+                    f"https://onlinecourses.nptel.ac.in/e-learning/api/courseoutline?course_id={c_id}"
+                )
+                if ok:
+                    data = json.loads(text)
+                    payload = json.loads(data.get("payload", "{}")) if isinstance(data.get("payload"), str) else data.get("payload", {})
+                    units = payload.get("units", {})
+                    
+                    if units:
+                        print("\nAvailable Chapters (Units):")
+                        unit_keys = list(units.keys())
+                        for u_idx, u_key in enumerate(unit_keys, 1):
+                            u_title = units[u_key].get("title", f"Unit {u_key}")
+                            print(f"{u_idx}. {u_title}")
+                        
+                        print("A. All Chapters")
+                        unit_choice = input("\nEnter the chapter numbers to download (comma-separated), or 'A' for All: ").strip().lower()
+                        
+                        if unit_choice != 'a':
+                            selected_unit_ids = []
+                            for p in unit_choice.split(","):
+                                try:
+                                    u_idx = int(p.strip()) - 1
+                                    if 0 <= u_idx < len(unit_keys):
+                                        u_key = unit_keys[u_idx]
+                                        # Handle the internal NPTEL unit ID format which often has a leading underscore
+                                        clean_uid = u_key[1:] if u_key.startswith("_") else u_key
+                                        selected_unit_ids.append(clean_uid)
+                                except ValueError:
+                                    pass
+                            
+                            if selected_unit_ids:
+                                target_units = selected_unit_ids
+                                print(f"Selected {len(target_units)} chapters.")
+                            else:
+                                print("No valid chapters selected. Downloading all chapters.")
+                    else:
+                        print("No chapters found.")
+            else:
+                print("❌ Invalid selection.")
+                return
+        except ValueError:
+            print("❌ Invalid selection.")
+            return
+
+    print(f"\n⚡ Extracting PDF notes for {len(course_ids_to_process)} courses in parallel using {max_parallel} workers...")
 
     async def worker(cid):
         w = NPTELAutomator(cookies_input=automator.cookies_input, output_dir=automator.output_dir)
-        await w.fetch_and_download_course_notes(cid)
+        await w.fetch_and_download_course_notes(cid, target_units=target_units)
 
     sem = asyncio.Semaphore(max_parallel)
 
@@ -1101,10 +1237,10 @@ async def option3_download_all_notes(automator, max_parallel=4):
         async with sem:
             await worker(cid)
 
-    tasks = [sem_worker(cid) for cid in course_ids]
+    tasks = [sem_worker(cid) for cid in course_ids_to_process]
     await asyncio.gather(*tasks)
 
-    print("\n🎉 ALL UNIT-WISE PDF NOTES DOWNLOADED SUCCESSFULLY!")
+    print("\n🎉 ALL SELECTED PDF NOTES DOWNLOADED SUCCESSFULLY!")
 
 
 async def option4_complete_all_courses_parallel(automator, max_parallel=5, max_units=10, max_lessons=20):

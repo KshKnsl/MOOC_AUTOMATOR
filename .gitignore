@@ -1,7 +1,48 @@
-*.pkl
-.venv
-.claude
-__pycache__/
-.env
-extracted_quizzes
+# ─── Session Credentials & API Keys ────────────────────────────────────────
+# NEVER commit these — they contain live session tokens and secret API keys
 cookies.json
+cookies*.json
+.gemini_key
+*.key
+.env
+.env.*
+*.pem
+*.p12
+secrets/
+credentials/
+
+# ─── Downloaded Notes (PDFs) ────────────────────────────────────────────────
+# Large binary files — download locally, don't push to GitHub
+downloaded_notes/
+*.pdf
+
+# ─── Extracted Quiz Data ────────────────────────────────────────────────────
+# Auto-generated from NPTEL — can be regenerated, not source code
+extracted_quizzes/
+
+# ─── Python Artifacts ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pkl
+*.pyc
+*.pyd
+.venv/
+venv/
+env/
+.Python
+
+# ─── AI / IDE Config ────────────────────────────────────────────────────────
+.claude/
+.gemini/
+.cursor/
+.aider*
+
+# ─── OS Junk ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ───────────────────────────────────────────────────────────────────
+*.log
+logs/

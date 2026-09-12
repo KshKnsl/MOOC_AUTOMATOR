@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+*.key
 
 # debug
 npm-debug.log*
@@ -39,3 +40,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ─── Session Credentials & API Keys ───────────────────────────────────────
+.gemini_key
+cookies.json
+cookies*.json
+secrets/
+credentials/
+
+# ─── Downloaded PDFs ──────────────────────────────────────────────────────
+# These are large binaries and should never be committed
+*.pdf
+
+# ─── AI / IDE Config ──────────────────────────────────────────────────────
+.gemini/
+.claude/
+.cursor/
+.aider*

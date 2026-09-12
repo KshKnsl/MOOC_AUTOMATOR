@@ -117,6 +117,41 @@ class NPTELApiHandler(BaseHTTPRequestHandler):
                     pass
             self._send_json(200, {"notes": notes})
 
+        elif path == "/api/files":
+            # Returns the full downloaded_notes/ directory tree
+            cid = params.get("course_id", [""])[0]
+            base = os.path.abspath("./downloaded_notes")
+            if cid:
+                base = os.path.join(base, cid)
+
+            def build_tree(directory):
+                result = []
+                if not os.path.isdir(directory):
+                    return result
+                try:
+                    entries = sorted(os.listdir(directory))
+                except Exception:
+                    return result
+                for entry in entries:
+                    full = os.path.join(directory, entry)
+                    if os.path.isdir(full):
+                        result.append({
+                            "type": "folder",
+                            "name": entry,
+                            "children": build_tree(full),
+                        })
+                    elif os.path.isfile(full):
+                        result.append({
+                            "type": "file",
+                            "name": entry,
+                            "size": os.path.getsize(full),
+                            "path": os.path.relpath(full, "./downloaded_notes"),
+                        })
+                return result
+
+            tree = build_tree(base)
+            self._send_json(200, {"tree": tree, "base": base})
+
         else:
             self._send_json(404, {"error": "Endpoint not found"})
 
