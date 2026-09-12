@@ -57,8 +57,30 @@ import { Token } from "@astryxdesign/core/Token";
 import { useToast } from "@astryxdesign/core/Toast";
 import { TreeList } from "@astryxdesign/core/TreeList";
 import type { TreeListItemData } from "@astryxdesign/core/TreeList";
+import { apiFetch } from "@/lib/api";
+import {
+  buildTreeFromPdfs,
+  downloadBlob,
+  getAssignmentsLocal,
+  getCookieHeader,
+  getCookiesRaw,
+  getCoursesLocal,
+  getGeminiKeyLocal,
+  getPdfLocal,
+  getQuizzesLocal,
+  listPdfsLocal,
+  localStatus,
+  pickNotesDirectory,
+  saveAssignmentsLocal,
+  saveCookiesLocal,
+  saveCoursesLocal,
+  saveGeminiKeyLocal,
+  savePdfLocal,
+  saveQuizzesLocal,
+  writeBlobToDirectory,
+} from "@/lib/client-store";
 
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = "/api";
 
 type TabId = "solver" | "courses" | "quizzes" | "notes";
 
@@ -162,10 +184,6 @@ function sourceColor(source?: string): "blue" | "green" | "orange" | "gray" {
   return "gray";
 }
 
-function filePreviewUrl(path: string): string {
-  return `${API_BASE}/file?path=${encodeURIComponent(path)}`;
-}
-
 function toTreeItems(
   nodes: FNode[],
   onOpenFile: (file: FNode) => void,
@@ -217,43 +235,71 @@ function flattenFiles(nodes: FNode[], prefix = ""): FNode[] {
   return files;
 }
 
-function FileManagerPanel({ courseId }: { courseId: string }) {
+function FileManagerPanel({ courseId, refreshKey = 0 }: { courseId: string; refreshKey?: number }) {
   const [tree, setTree] = useState<FNode[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [query, setQuery] = useState("");
   const [previewFile, setPreviewFile] = useState<FNode | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const fetchTree = useCallback(async (cid: string) => {
     setLoading(true);
     try {
-      const res = await fetch(cid ? `${API_BASE}/files?course_id=${cid}` : `${API_BASE}/files`);
-      if (res.ok) {
-        const data = await res.json();
-        setTree(data.tree || []);
-        setSearched(true);
-        setPreviewFile(null);
+      if (cid) {
+        const pdfs = await listPdfsLocal(cid);
+        setTree(buildTreeFromPdfs(pdfs));
+      } else {
+        setTree([]);
       }
+      setSearched(true);
+      setPreviewFile(null);
     } catch {
-      /* server may be offline */
+      setTree([]);
+      setSearched(true);
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
     if (courseId) fetchTree(courseId);
-  }, [courseId, fetchTree]);
+  }, [courseId, fetchTree, refreshKey]);
+
+  useEffect(() => {
+    let revoked = false;
+    let createdUrl: string | null = null;
+    setPreviewUrl(null);
+    if (!previewFile?.path) return;
+    getPdfLocal(previewFile.path).then((stored) => {
+      if (revoked || !stored) return;
+      createdUrl = URL.createObjectURL(stored.blob);
+      if (revoked) {
+        URL.revokeObjectURL(createdUrl);
+        return;
+      }
+      setPreviewUrl(createdUrl);
+    });
+    return () => {
+      revoked = true;
+      if (createdUrl) URL.revokeObjectURL(createdUrl);
+    };
+  }, [previewFile?.path]);
 
   const files = flattenFiles(tree);
   const filtered = query ? files.filter((file) => file.name.toLowerCase().includes(query.toLowerCase())) : null;
   const totalFiles = countFiles(tree);
   const folders = tree.filter((node) => node.type === "folder").length;
-  const previewUrl = previewFile?.path ? filePreviewUrl(previewFile.path) : null;
 
   const openFile = (file: FNode) => {
     if (file.path && file.name.toLowerCase().endsWith(".pdf")) {
       setPreviewFile(file);
     }
+  };
+
+  const savePreviewToDevice = async () => {
+    if (!previewFile?.path) return;
+    const stored = await getPdfLocal(previewFile.path);
+    if (stored) downloadBlob(stored.blob, stored.name);
   };
 
   return (
@@ -305,7 +351,7 @@ function FileManagerPanel({ courseId }: { courseId: string }) {
                   isCompact
                   icon={<Icon icon={Download} size="lg" />}
                   title="No files yet"
-                  description="Fetch PDF lecture notes for this course to populate the file tree."
+                  description="Fetch PDF lecture notes for this course. They download to this device and stay available for preview here."
                 />
               ) : query && filtered ? (
                 filtered.length === 0 ? (
@@ -362,6 +408,12 @@ function FileManagerPanel({ courseId }: { courseId: string }) {
                         ) : null}
                       </VStack>
                       <HStack gap={2}>
+                        <IconButton
+                          icon={<Icon icon={Download} />}
+                          label="Save to this device"
+                          variant="ghost"
+                          onClick={savePreviewToDevice}
+                        />
                         <IconButton
                           icon={<Icon icon={ExternalLink} />}
                           label="Open in new tab"
@@ -424,48 +476,57 @@ export default function NPTELDashboard() {
   const [quizList, setQuizList] = useState<Quiz[]>([]);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [notesCourseId, setNotesCourseId] = useState("");
+  const [filesRefreshKey, setFilesRefreshKey] = useState(0);
 
   useEffect(() => {
-    fetchStatus();
-    fetchCourses();
-    fetchAssignments();
+    setCookieInput(getCookiesRaw());
+    setGeminiKeyInput(getGeminiKeyLocal());
+    setStatus(localStatus());
+    const list = getCoursesLocal();
+    setCourses(list);
+    if (list.length > 0) {
+      setSelectedCourseId(list[0].id);
+      setNotesCourseId(list[0].id);
+    }
+    const cached = getAssignmentsLocal();
+    const cachedList = cached.unsubmitted?.length ? cached.unsubmitted : cached.all || [];
+    if (cachedList.length) {
+      setAssignments(cachedList);
+      selectAssignmentToSolve(cachedList[0]);
+    }
+    pingApi();
+    if (getCookieHeader() && list.length) {
+      fetchAssignments(list);
+    }
   }, []);
 
-  const fetchStatus = async () => {
+  const pingApi = async () => {
     try {
       const res = await fetch(`${API_BASE}/status`);
-      if (res.ok) setStatus(await res.json());
+      if (!res.ok) throw new Error("unavailable");
     } catch {
-      setActionMsg({ text: "Python API server is offline. Run python3 server.py in the project root.", type: "error" });
+      setActionMsg({ text: "API is unavailable. Restart the Next.js app with npm run dev.", type: "error" });
     }
   };
 
-  const fetchCourses = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/courses`);
-      if (res.ok) {
-        const data = await res.json();
-        const list: Course[] = data.courses || [];
-        setCourses(list);
-        if (list.length > 0) {
-          setSelectedCourseId((current) => current || list[0].id);
-          setNotesCourseId((current) => current || list[0].id);
-        }
-      }
-    } catch {
-      /* ignore */
-    }
-  };
+  const refreshLocalStatus = () => setStatus(localStatus());
 
-  const fetchAssignments = async () => {
+  const fetchAssignments = async (courseList?: Course[]) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/assignments`);
+      const res = await apiFetch(`${API_BASE}/assignments`, {
+        method: "POST",
+        body: JSON.stringify({ courses: courseList || getCoursesLocal() }),
+      });
       if (res.ok) {
         const data = await res.json();
         const list: Assignment[] = data.unsubmitted?.length > 0 ? data.unsubmitted : data.all || [];
+        saveAssignmentsLocal(data.unsubmitted || [], data.all || []);
         setAssignments(list);
         if (list.length > 0 && !selectedAssignment) selectAssignmentToSolve(list[0]);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setActionMsg({ text: data.error || "Could not scan assignments.", type: "error" });
       }
     } catch (error) {
       console.error(error);
@@ -496,14 +557,13 @@ export default function NPTELDashboard() {
     setLoading(true);
     setActionMsg({ text: "Solving assignment questions with Gemini…", type: "info" });
     try {
-      const res = await fetch(`${API_BASE}/solve`, {
+      const res = await apiFetch(`${API_BASE}/solve`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           course_title: selectedAssignment.course_title || selectedAssignment.course_id,
           quiz_title: selectedAssignment.title,
           questions: selectedAssignment.questions,
-          gemini_key: geminiKeyInput,
+          gemini_key: geminiKeyInput || getGeminiKeyLocal(),
         }),
       });
       const data = await res.json();
@@ -547,9 +607,8 @@ export default function NPTELDashboard() {
     setConfirmSubmit(false);
     setActionMsg({ text: "Submitting answers to NPTEL…", type: "info" });
     try {
-      const res = await fetch(`${API_BASE}/submit`, {
+      const res = await apiFetch(`${API_BASE}/submit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           course_id: selectedAssignment.course_id,
           unit_id: selectedAssignment.unit_id,
@@ -579,14 +638,20 @@ export default function NPTELDashboard() {
     setConfirmCompleteAll(false);
     setActionMsg({ text: "Marking course lessons completed…", type: "info" });
     try {
-      const res = await fetch(`${API_BASE}/complete-lessons`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ course_id: courseId }),
-      });
-      const data = await res.json();
-      setActionMsg({ text: data.message || "Course lessons marked completed.", type: "success" });
-      toast({ body: data.message || "Lessons marked complete." });
+      const ids = courseId ? [courseId] : getCoursesLocal().map((course) => course.id);
+      for (const id of ids) {
+        const res = await apiFetch(`${API_BASE}/complete-lessons`, {
+          method: "POST",
+          body: JSON.stringify({ course_id: id }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setActionMsg({ text: data.error || data.message || "Could not complete lessons.", type: "error" });
+          return;
+        }
+      }
+      setActionMsg({ text: "Course lessons marked completed.", type: "success" });
+      toast({ body: "Lessons marked complete." });
     } catch (error) {
       setActionMsg({ text: `Error: ${error instanceof Error ? error.message : "Unknown error"}`, type: "error" });
     } finally {
@@ -595,32 +660,34 @@ export default function NPTELDashboard() {
   };
 
   const fetchQuizData = async (courseId: string) => {
-    try {
-      const res = await fetch(`${API_BASE}/quizzes?course_id=${courseId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setSolutionsMarkdown(data.solutions_markdown || "");
-        setQuizList(data.quizzes || []);
-        if (data.quizzes?.length > 0) setSelectedQuiz(data.quizzes[0]);
-        else setSelectedQuiz(null);
-      }
-    } catch {
-      /* ignore */
-    }
+    const data = getQuizzesLocal(courseId);
+    setSolutionsMarkdown(data.solutions_markdown || "");
+    setQuizList((data.quizzes || []) as Quiz[]);
+    if (data.quizzes?.length > 0) setSelectedQuiz(data.quizzes[0] as Quiz);
+    else setSelectedQuiz(null);
   };
 
   const extractQuizzes = async (courseId?: string) => {
     setLoading(true);
     setActionMsg({ text: "Extracting quizzes and generating study guides…", type: "info" });
     try {
-      const res = await fetch(`${API_BASE}/extract-quizzes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ course_id: courseId }),
-      });
-      const data = await res.json();
-      setActionMsg({ text: `Extracted ${data.quizzes?.length || 0} quizzes and generated guides.`, type: "success" });
-      if (courseId) fetchQuizData(courseId);
+      const ids = courseId ? [courseId] : getCoursesLocal().map((course) => course.id);
+      let total = 0;
+      for (const id of ids) {
+        const res = await apiFetch(`${API_BASE}/extract-quizzes`, {
+          method: "POST",
+          body: JSON.stringify({ course_id: id }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setActionMsg({ text: data.error || "Could not extract quizzes.", type: "error" });
+          return;
+        }
+        saveQuizzesLocal(id, data.quizzes || [], data.solutions_markdown || "");
+        total += data.quizzes?.length || 0;
+      }
+      setActionMsg({ text: `Extracted ${total} quizzes and generated guides.`, type: "success" });
+      fetchQuizData(courseId || selectedCourseId || ids[0] || "");
     } catch (error) {
       setActionMsg({ text: `Error: ${error instanceof Error ? error.message : "Unknown error"}`, type: "error" });
     } finally {
@@ -630,16 +697,119 @@ export default function NPTELDashboard() {
 
   const downloadNotes = async () => {
     setLoading(true);
-    setActionMsg({ text: "Fetching PDF lecture notes…", type: "info" });
+    setActionMsg({ text: "Choose a folder on this device, then notes will download there.", type: "info" });
     try {
-      const res = await fetch(`${API_BASE}/download-notes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ course_id: notesCourseId || undefined }),
-      });
+      const pick = await pickNotesDirectory();
+      const dir = pick.kind === "picked" ? pick.handle : null;
+      const saveToDownloads = pick.kind === "unsupported";
+      const ids = notesCourseId ? [notesCourseId] : getCoursesLocal().map((course) => course.id);
+      let saved = 0;
+      let failed = 0;
+      for (const courseId of ids) {
+        const res = await apiFetch(`${API_BASE}/download-notes`, {
+          method: "POST",
+          body: JSON.stringify({ course_id: courseId }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setActionMsg({ text: data.error || "Could not find lecture notes.", type: "error" });
+          return;
+        }
+        const items = Array.isArray(data.notes) ? data.notes : [];
+        for (let index = 0; index < items.length; index += 1) {
+          const item = items[index] as {
+            course_id: string;
+            unit_title: string;
+            filename: string;
+            url: string;
+            source: "drive" | "url";
+            file_id?: string;
+          };
+          setActionMsg({
+            text: `Saving ${saved + failed + 1} of ${items.length} notes to this device…`,
+            type: "info",
+          });
+          const fileRes = await apiFetch(`${API_BASE}/fetch-note`, {
+            method: "POST",
+            body: JSON.stringify({ item }),
+          });
+          if (!fileRes.ok) {
+            failed += 1;
+            continue;
+          }
+          const blob = await fileRes.blob();
+          const filename =
+            decodeURIComponent(fileRes.headers.get("X-Filename") || "") || item.filename;
+          const unit = String(item.unit_title || "notes").replace(/[\\/]/g, "_");
+          const relativePath = `${item.course_id || courseId}/${unit}/${filename}`;
+          await savePdfLocal({
+            path: relativePath,
+            courseId: item.course_id || courseId,
+            name: filename,
+            size: blob.size,
+            blob,
+          });
+          if (dir) {
+            await writeBlobToDirectory(dir, relativePath, blob);
+          } else if (saveToDownloads) {
+            downloadBlob(blob, filename);
+          }
+          saved += 1;
+        }
+      }
+      setFilesRefreshKey((value) => value + 1);
+      if (!saved && !failed) {
+        setActionMsg({ text: "No lecture notes found for this course.", type: "info" });
+      } else {
+        const where =
+          pick.kind === "picked"
+            ? "the folder you chose"
+            : pick.kind === "unsupported"
+              ? "your Downloads folder"
+              : "this browser (open a PDF and use Save to this device)";
+        setActionMsg({
+          text: failed
+            ? `Saved ${saved} PDFs to ${where} (${failed} failed).`
+            : `Saved ${saved} PDFs to ${where}.`,
+          type: saved ? "success" : "error",
+        });
+      }
+      toast({ body: saved ? `Saved ${saved} notes to this device.` : "No notes could be saved." });
+    } catch (error) {
+      setActionMsg({ text: `Error: ${error instanceof Error ? error.message : "Unknown error"}`, type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveCookies = () => {
+    if (saveCookiesLocal(cookieInput)) {
+      setActionMsg({ text: "Cookies saved in this browser.", type: "success" });
+      toast({ body: "Session cookies saved on this device." });
+      refreshLocalStatus();
+    } else {
+      setActionMsg({ text: "Could not save cookies.", type: "error" });
+    }
+  };
+
+  const refreshCourses = async () => {
+    setLoading(true);
+    setActionMsg({ text: "Refreshing enrolled courses from Swayam…", type: "info" });
+    try {
+      const res = await apiFetch(`${API_BASE}/refresh-courses`, { method: "POST" });
+      const data = await res.json();
       if (res.ok) {
-        setActionMsg({ text: "Download started. Check the terminal if a prompt appears.", type: "success" });
-        toast({ body: "Notes download started." });
+        const list: Course[] = data.courses || [];
+        saveCoursesLocal(list);
+        setCourses(list);
+        if (list.length > 0) {
+          setSelectedCourseId((current) => current || list[0].id);
+          setNotesCourseId((current) => current || list[0].id);
+        }
+        setActionMsg({ text: `Loaded ${list.length} active courses.`, type: "success" });
+        refreshLocalStatus();
+      } else {
+        setActionMsg({ text: data.error || "Could not refresh courses.", type: "error" });
       }
     } catch (error) {
       setActionMsg({ text: `Error: ${error instanceof Error ? error.message : "Unknown error"}`, type: "error" });
@@ -648,31 +818,11 @@ export default function NPTELDashboard() {
     }
   };
 
-  const saveCookies = async () => {
-    const res = await fetch(`${API_BASE}/cookies`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cookies: cookieInput }),
-    });
-    if (res.ok) {
-      setActionMsg({ text: "Cookies saved.", type: "success" });
-      toast({ body: "Session cookies saved." });
-      fetchStatus();
-    } else {
-      setActionMsg({ text: "Could not save cookies.", type: "error" });
-    }
-  };
-
-  const saveGeminiKey = async () => {
-    const res = await fetch(`${API_BASE}/gemini-key`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: geminiKeyInput }),
-    });
-    if (res.ok) {
-      setActionMsg({ text: "Gemini key saved.", type: "success" });
-      toast({ body: "Gemini API key saved." });
-      fetchStatus();
+  const saveGeminiKey = () => {
+    if (saveGeminiKeyLocal(geminiKeyInput)) {
+      setActionMsg({ text: "Gemini key saved in this browser.", type: "success" });
+      toast({ body: "Gemini API key saved on this device." });
+      refreshLocalStatus();
     } else {
       setActionMsg({ text: "Could not save Gemini key.", type: "error" });
     }
@@ -691,7 +841,7 @@ export default function NPTELDashboard() {
     solver: { title: "Quiz Solver", subtitle: "Review answers, then submit to NPTEL." },
     courses: { title: "Active Courses", subtitle: "Complete lessons or extract quiz study guides." },
     quizzes: { title: "Study Guides", subtitle: "Browse extracted quizzes and markdown solutions." },
-    notes: { title: "Lecture Notes", subtitle: "Download and browse unit-wise PDF notes." },
+    notes: { title: "Lecture Notes", subtitle: "Save PDFs to this device and preview them here." },
   };
 
   return (
@@ -799,8 +949,7 @@ export default function NPTELDashboard() {
                   icon={<Icon icon={RefreshCw} />}
                   isLoading={loading}
                   onClick={() => {
-                    fetchStatus();
-                    fetchCourses();
+                    refreshLocalStatus();
                     fetchAssignments();
                   }}
                 />
@@ -1001,7 +1150,7 @@ export default function NPTELDashboard() {
                   <EmptyState
                     icon={<Icon icon={BookOpen} size="lg" />}
                     title="No active courses"
-                    description="Load session cookies, then refresh to pull enrolled NPTEL courses."
+                    description="Add cookies in Settings, then refresh to pull enrolled NPTEL courses into this browser."
                     actions={<Button label="Open settings" onClick={() => setShowSettings(true)} />}
                   />
                 </Center>
@@ -1202,7 +1351,7 @@ export default function NPTELDashboard() {
           }
           content={
             <LayoutContent>
-              <FileManagerPanel courseId={notesCourseId} />
+              <FileManagerPanel courseId={notesCourseId} refreshKey={filesRefreshKey} />
             </LayoutContent>
           }
         />
@@ -1213,7 +1362,7 @@ export default function NPTELDashboard() {
           header={
             <DialogHeader
               title="Connection settings"
-              subtitle="Store Swayam session cookies and a Gemini key locally."
+              subtitle="Cookies and Gemini key stay in this browser. Nothing is stored on the server."
               onOpenChange={setShowSettings}
             />
           }
@@ -1222,7 +1371,7 @@ export default function NPTELDashboard() {
               <VStack gap={4}>
                 <TextArea
                   label="Swayam session cookies"
-                  description="Paste g_a, g_b, and g_c or a JSON cookie array."
+                  description="Paste g_a, g_b, and g_c or a JSON cookie array. Saved only in this browser."
                   value={cookieInput}
                   onChange={setCookieInput}
                   placeholder="g_a=…; g_b=…; g_c=…"
@@ -1230,6 +1379,7 @@ export default function NPTELDashboard() {
                 />
                 <TextInput
                   label="Google Gemini API key"
+                  description="Saved only in this browser."
                   type="password"
                   value={geminiKeyInput}
                   onChange={setGeminiKeyInput}
@@ -1241,6 +1391,7 @@ export default function NPTELDashboard() {
           footer={
             <LayoutFooter>
               <HStack gap={2} hAlign="end">
+                <Button label="Refresh courses" variant="ghost" isLoading={loading} onClick={refreshCourses} />
                 <Button label="Save cookies" variant="secondary" onClick={saveCookies} />
                 <Button label="Save key" variant="primary" onClick={saveGeminiKey} />
               </HStack>

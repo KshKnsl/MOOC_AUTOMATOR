@@ -1,5 +1,6 @@
 allowBuilds:
-  '@astryxdesign/core': set this to true or false
+  '@astryxdesign/cli': true
+  '@astryxdesign/core': true
 minimumReleaseAgeExclude:
   - '@astryxdesign/core@0.4.2'
   - '@astryxdesign/theme-neutral@0.4.2'
