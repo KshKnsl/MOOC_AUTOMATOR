@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import mimetypes
 import os
 import re
 import sys
@@ -29,6 +30,24 @@ class NPTELApiHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def _send_file(self, file_path, inline=True):
+        if not os.path.isfile(file_path):
+            self._send_json(404, {"error": "File not found"})
+            return
+        content_type = mimetypes.guess_type(file_path)[0] or "application/octet-stream"
+        filename = os.path.basename(file_path)
+        disposition = "inline" if inline else "attachment"
+        size = os.path.getsize(file_path)
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(size))
+        self.send_header("Content-Disposition", f'{disposition}; filename="{filename}"')
+        self.send_header("Cache-Control", "private, max-age=60")
+        self._send_cors()
+        self.end_headers()
+        with open(file_path, "rb") as handle:
+            self.wfile.write(handle.read())
 
     def do_OPTIONS(self):
         self.send_response(204)
@@ -151,6 +170,21 @@ class NPTELApiHandler(BaseHTTPRequestHandler):
 
             tree = build_tree(base)
             self._send_json(200, {"tree": tree, "base": base})
+
+        elif path == "/api/file":
+            rel = params.get("path", [""])[0].replace("\\", "/")
+            notes_root = os.path.abspath("./downloaded_notes")
+            if not rel or any(part == ".." for part in rel.split("/")):
+                self._send_json(400, {"error": "Invalid path"})
+                return
+            full = os.path.abspath(os.path.join(notes_root, rel))
+            if full != notes_root and not full.startswith(notes_root + os.sep):
+                self._send_json(403, {"error": "Access denied"})
+                return
+            if not os.path.isfile(full):
+                self._send_json(404, {"error": "File not found"})
+                return
+            self._send_file(full)
 
         else:
             self._send_json(404, {"error": "Endpoint not found"})

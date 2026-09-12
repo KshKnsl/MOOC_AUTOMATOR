@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
+import { Figtree } from "next/font/google";
+import { Providers } from "./providers";
 import "./globals.css";
 
+const figtree = Figtree({
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "NPTEL Automator & AI Assignment Solver",
-  description: "Next.js frontend powered by Astryx design system, REST API automator, and Google Gemini AI solver.",
+  title: "NPTEL Automator",
+  description: "REST automation and Gemini-powered assignment solver for NPTEL and Swayam courses.",
 };
 
 export default function RootLayout({
@@ -12,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-astryx-theme="neutral" className="dark">
-      <body className="min-h-screen bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-500/20 selection:text-cyan-300">
-        {children}
+    <html lang="en" data-theme="dark" data-astryx-theme="neutral" className={figtree.className}>
+      <body>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

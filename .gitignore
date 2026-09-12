@@ -11,11 +11,6 @@ cookies*.json
 secrets/
 credentials/
 
-# ─── Downloaded Notes (PDFs) ────────────────────────────────────────────────
-# Large binary files — download locally, don't push to GitHub
-downloaded_notes/
-*.pdf
-
 # ─── Extracted Quiz Data ────────────────────────────────────────────────────
 # Auto-generated from NPTEL — can be regenerated, not source code
 extracted_quizzes/

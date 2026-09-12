@@ -1,0 +1,338 @@
+[
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "Introduction to HR Analytics",
+    "url": "https://drive.google.com/file/d/1tUiIwWtX9uIpoxZlCnL57BYKsNjkV_1Q/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 01.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "HR Data Preparation & Development of HR metrics",
+    "url": "https://drive.google.com/file/d/1o9Jld1fUCSznlMI6Xfe81F--O0s82EHb/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 02.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "Data science framework",
+    "url": "https://drive.google.com/file/d/18N16kYhXb-ChhhKWSQ80vf_wiM4T5HwD/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 03.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "Pitfalls of data science framework and Basics of data visualization",
+    "url": "https://drive.google.com/file/d/10qyqee3oYVOyHB-MlN8Soq2ZJMMZG1sM/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 04.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "Developing HR analytics unit and culture",
+    "url": "https://drive.google.com/file/d/13WP7thqN3Vz2TLGZOH8vjhI04jWNDmDu/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 05.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "List of books",
+    "url": "https://drive.google.com/file/d/1S-jK55Mm8Urr4ShFv1ST85I-c88Zq592/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/Lec 06.pdf"
+  },
+  {
+    "unit_id": 21,
+    "unit_title": "Week 1",
+    "lesson_title": "Solution for Week 1: Assignment 1",
+    "url": "https://drive.google.com/file/d/1xWuBgkZvWi0Be1CtIpCgVGBHKn9kp68n/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 1/WEEK 1 ASSIGNMENT 1.pdf"
+  },
+  {
+    "unit_id": 31,
+    "unit_title": "Week 2",
+    "lesson_title": "Introduction to data visualization",
+    "url": "https://drive.google.com/file/d/1dd28l4rQ4O4q_yuOxnfMTg0rubHwY_q-/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 2/Lec 07.pdf"
+  },
+  {
+    "unit_id": 31,
+    "unit_title": "Week 2",
+    "lesson_title": "Solution for Week 2: Assignment 2",
+    "url": "https://drive.google.com/file/d/1CSno6x_lfUcdMLji2FWklLY9fisdvOi3/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 2/WEEK 2  ASSIGNMENT 2.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Steps of recruitment",
+    "url": "https://drive.google.com/file/d/18m8rcepQ53v5r91uLBpQme0TBfOoh2pd/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/Lec13.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Managerial challenges of recruitment -1",
+    "url": "https://drive.google.com/file/d/1yW7xu5k6mDzaX9ULc6Xz3OeWwWmG5riF/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/Lec14.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Managerial challenges of recruitment \u2013 2",
+    "url": "https://drive.google.com/file/d/1wGLVqAUg4FDfaTpbRwOMn8Y49NL796H9/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/Lec 15.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Recruitment Analytics \u2013 1",
+    "url": "https://drive.google.com/file/d/1h7Q2-bFy2876legp139AiulbnkP2ZvAo/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/Lec 16.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Recruitment Analytics \u2013 2",
+    "url": "https://drive.google.com/file/d/1UGTrxXME5EEqwKjEwZgXWguLmJXCAYH0/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/Lec 17.pdf"
+  },
+  {
+    "unit_id": 39,
+    "unit_title": "Week 3",
+    "lesson_title": "Solution for Week 3: Assignment 3",
+    "url": "https://drive.google.com/file/d/1sjg_RRBnBiPZw_1l0ueoK8kK0UXWFIgn/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 3/WEEK 3  ASSIGNMENT 3.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Recruitment Analytics \u2013 3",
+    "url": "https://drive.google.com/file/d/1FHxue3OsrkGQGIe94sJGxwfr2jIJNvz1/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/Lec 18.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Recruitment Analytics \u2013 4",
+    "url": "https://drive.google.com/file/d/13pXAIPHmyO-HFFwlqj1-FpIslvBTFDmM/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/Lec 19.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Steps of employee selection process",
+    "url": "https://drive.google.com/file/d/1BGMldZoc5igLxUBvscWmIu6eWlZYVyj5/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/Lec 20.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Managerial challenges of employee selection -1",
+    "url": "https://drive.google.com/file/d/1VHLzRRtkh_1co6dQl30kmAQcfdsPpOzz/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/Lec 21.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Managerial challenges of employee selection - 2",
+    "url": "https://drive.google.com/file/d/1vAvc603J8WFQxRUHrqKz_yrtXDbtiXvc/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/Lec 22.pdf"
+  },
+  {
+    "unit_id": 51,
+    "unit_title": "Week 4",
+    "lesson_title": "Solution for Week 4: Assignment 4",
+    "url": "https://drive.google.com/file/d/19EuxSGPB1bLJbtxCDu1W7tHRV_p1HjfL/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 4/WEEK 4  ASSIGNMENT 4.pdf"
+  },
+  {
+    "unit_id": 58,
+    "unit_title": "Week 5",
+    "lesson_title": "Selection Analytics \u2013 1",
+    "url": "https://drive.google.com/file/d/1bsHZ_7qhg2GZwPlONKXaMzOS1eMlKh01/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 5/Lec 23.pdf"
+  },
+  {
+    "unit_id": 58,
+    "unit_title": "Week 5",
+    "lesson_title": "Selection Analytics \u2013 2",
+    "url": "https://drive.google.com/file/d/1kJZAUTUKpg4yjKJIxXbyG2jhcI2w2E8e/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 5/Lec 24.pdf"
+  },
+  {
+    "unit_id": 58,
+    "unit_title": "Week 5",
+    "lesson_title": "Selection Analytics \u2013 3",
+    "url": "https://drive.google.com/file/d/173gRmcOD-RNV_CVhcpZQ3nI435fNWbhA/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 5/Lec 25.pdf"
+  },
+  {
+    "unit_id": 58,
+    "unit_title": "Week 5",
+    "lesson_title": "Selection analytics- 4",
+    "url": "https://drive.google.com/file/d/1dFg28xvK2t3sPw38mI5-Q8e_cEUDTpGt/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 5/Lec 26.pdf"
+  },
+  {
+    "unit_id": 58,
+    "unit_title": "Week 5",
+    "lesson_title": "Data Visualization of Recruitment & Selection",
+    "url": "https://drive.google.com/file/d/1mGbvFk-SVaeGRd3F9VUlNNOeHrgxcgrN/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 5/Lec 27.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 6",
+    "lesson_title": "Steps of training",
+    "url": "https://drive.google.com/file/d/13SFWYLOVSe2P2rR5EC-QbGRTHaQtZQ0R/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 6/Lec 28.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 6",
+    "lesson_title": "Managerial challenges of employee training -1",
+    "url": "https://drive.google.com/file/d/1ooLDbKg8sRWYjaZGrrA-qtFClCkXVOGh/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 6/Lec 29.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 6",
+    "lesson_title": "Managerial challenges of employee training -2",
+    "url": "https://drive.google.com/file/d/1TdMJIEo5ccOgg9tpu1FUUgobGX5lYxsZ/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 6/Lec 30.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 6",
+    "lesson_title": "Training analytics - 1",
+    "url": "https://drive.google.com/file/d/1sQDoSIlTjatBvuWF3iUxJ0DtQIZA0-af/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 6/Lec 31.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 6",
+    "lesson_title": "Training analytics - 2",
+    "url": "https://drive.google.com/file/d/1-xsDgoG0m5qcw9t6XIGGmfbrf6OtW__E/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 6/Lec 32.pdf"
+  },
+  {
+    "unit_id": 72,
+    "unit_title": "Week 7",
+    "lesson_title": "Training analytics - 3",
+    "url": "https://drive.google.com/file/d/1VI_4OMNYHqg7qFifQUk8wSq8BRqwv1nX/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 7/Lec 33.pdf"
+  },
+  {
+    "unit_id": 72,
+    "unit_title": "Week 7",
+    "lesson_title": "Training analytics - 4",
+    "url": "https://drive.google.com/file/d/1VcpjUW-yGnx2K7-UiY3TWm97M1kdoqeT/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 7/Lec 34.pdf"
+  },
+  {
+    "unit_id": 72,
+    "unit_title": "Week 7",
+    "lesson_title": "Steps of Employee Development",
+    "url": "https://drive.google.com/file/d/1HgV8HcUsYqBRcVFXd_9NlQCWxc32VbtB/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 7/Lec 35.pdf"
+  },
+  {
+    "unit_id": 72,
+    "unit_title": "Week 7",
+    "lesson_title": "Managerial Challenges of Employee Development - 1",
+    "url": "https://drive.google.com/file/d/1jUD0EqReMzVki01gt0JWoVwtjF0-zR7R/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 7/Lec 36.pdf"
+  },
+  {
+    "unit_id": 72,
+    "unit_title": "Week 7",
+    "lesson_title": "Managerial challenges of employee development -2",
+    "url": "https://drive.google.com/file/d/1g3--8m7a1xG2_secMlk2Dvazsm0MNagW/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 7/Lec 37.pdf"
+  },
+  {
+    "unit_id": 78,
+    "unit_title": "Week 8",
+    "lesson_title": "Employee Development Analytics \u2013 1",
+    "url": "https://drive.google.com/file/d/1B-fWntOdXA8y7txA-RRIcmic_Z99UfHw/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 8/Lec 38.pdf"
+  },
+  {
+    "unit_id": 78,
+    "unit_title": "Week 8",
+    "lesson_title": "Employee Development Analytics \u2013 2",
+    "url": "https://drive.google.com/file/d/1I9H6ITngHNZoFqCgREWK2Lp4F2nWIZFb/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 8/Lec 39.pdf"
+  },
+  {
+    "unit_id": 78,
+    "unit_title": "Week 8",
+    "lesson_title": "Employee Development Analytics \u2013 3",
+    "url": "https://drive.google.com/file/d/1TRwMMp9g9_lVxLi-dVDxnncXP6Rs-Rn3/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 8/Lec 40.pdf"
+  },
+  {
+    "unit_id": 78,
+    "unit_title": "Week 8",
+    "lesson_title": "Employee Development Analytics \u2013 4",
+    "url": "https://drive.google.com/file/d/1hlHXKpgRKwbhN97BScaKv7l5w8W1UtzS/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 8/Lec 41.pdf"
+  },
+  {
+    "unit_id": 78,
+    "unit_title": "Week 8",
+    "lesson_title": "Data Visualization of Training & Development",
+    "url": "https://drive.google.com/file/d/1ROA2KDY7YZ_QNeIbHzq9X0i5l1vo-Hgs/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 8/Lec 42.pdf"
+  },
+  {
+    "unit_id": 79,
+    "unit_title": "Week 9",
+    "lesson_title": "Steps of performance management",
+    "url": "https://drive.google.com/file/d/1k9T7RiazXFlB2iNWt2evXhqTwo3V9BJu/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 9/Lec 43.pdf"
+  },
+  {
+    "unit_id": 79,
+    "unit_title": "Week 9",
+    "lesson_title": "Managerial challenges of performance management -1",
+    "url": "https://drive.google.com/file/d/10JRARC5TPyc7nKXjMAC4-nDnP3Rmkvn6/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 9/Lec 44.pdf"
+  },
+  {
+    "unit_id": 79,
+    "unit_title": "Week 9",
+    "lesson_title": "Managerial challenges of performance management -2",
+    "url": "https://drive.google.com/file/d/1aJRrfM_W6RB5bhZhHRrnbwl1svHAnlwf/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 9/Lec 45.pdf"
+  },
+  {
+    "unit_id": 79,
+    "unit_title": "Week 9",
+    "lesson_title": "Performance Analytics -1",
+    "url": "https://drive.google.com/file/d/1HgAyyQ0KGEuXfxfczv_JJr0KJN8coc_n/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 9/Lec 46.pdf"
+  },
+  {
+    "unit_id": 79,
+    "unit_title": "Week 9",
+    "lesson_title": "Performance Analytics -2",
+    "url": "https://drive.google.com/file/d/1ckCNxOvVcZFVArnh27PajXpXuvQKDz1m/preview",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Week 9/Lec 47.pdf"
+  },
+  {
+    "unit_id": 136,
+    "unit_title": "Transcript",
+    "lesson_title": "English Transcript",
+    "url": "https://drive.google.com/drive/folders/1kLBwK_gQYh1u4hTkGzMmak27KDtHMfKj?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Transcript/Lec40.pdf"
+  },
+  {
+    "unit_id": 179,
+    "unit_title": "Books",
+    "lesson_title": "English Book",
+    "url": "https://drive.google.com/file/d/1-9kvwPBxUG7lAWTmJTgyd17Y92miVnaW/view?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_hs188/Books/110107492.pdf"
+  }
+]

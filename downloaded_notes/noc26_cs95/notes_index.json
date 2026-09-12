@@ -1,0 +1,65 @@
+[
+  {
+    "unit_id": 18,
+    "unit_title": "Week 1 Fundamentals of Deep Learning for Generative AI",
+    "lesson_title": "Week 1 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/18CYaAWIVIc22gKUFgnaQiKgE1ppw1OJz?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 1 Fundamentals of Deep Learning for Generative AI/Lec 06.pdf"
+  },
+  {
+    "unit_id": 30,
+    "unit_title": "Week 2 Autoencoders: The Representation Learning Model",
+    "lesson_title": "Week 2 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1r0MWH3yihjAsR29c4H7fTnft5iXjtjNT?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 2 Autoencoders_ The Representation Learning Model/Lec 16.pdf"
+  },
+  {
+    "unit_id": 47,
+    "unit_title": "Week 3 Variational Autoencoders (VAEs): Foundations",
+    "lesson_title": "Week 3 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1CJvXSr1h-E-hvQ-5D6XSimINkz1tTkPl?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 3 Variational Autoencoders (VAEs)_ Foundations/Lec 23.pdf"
+  },
+  {
+    "unit_id": 56,
+    "unit_title": "Week 4 Advanced Variational Autoencoders (VAEs): Practical Applications",
+    "lesson_title": "Week 4 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1jYIxJJhLpsCMjXk7OPwVJw4I1KMOkCQB?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 4 Advanced Variational Autoencoders (VAEs)_ Practical Applications/Lec 28.pdf"
+  },
+  {
+    "unit_id": 64,
+    "unit_title": "Week 5 Generative Adversarial Networks (GANs): Foundations",
+    "lesson_title": "Week 5 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1cHqnqx8USO1YapCJudJe4OEcmSK8hljB?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 5 Generative Adversarial Networks (GANs)_ Foundations/Lec 32.pdf"
+  },
+  {
+    "unit_id": 80,
+    "unit_title": "Week 6 Variants of GAN",
+    "lesson_title": "Week 6 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/17z2ZNvSIPjomhf-muz8PE9CihLXsMcJH?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 6 Variants of GAN/Lec 41.pdf"
+  },
+  {
+    "unit_id": 82,
+    "unit_title": "Week 7 Diffusion Model- Part I",
+    "lesson_title": "Week 7 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1nEwRR3xcGonv9DnmYhn2awxJCzr9HtY8?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 7 Diffusion Model- Part I/Lec 47.pdf"
+  },
+  {
+    "unit_id": 81,
+    "unit_title": "Week 8 Diffusion Model Part- 2",
+    "lesson_title": "Week 8 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/12Yo9QkndVVcY6FKjqls3GX5ZpWbbmEHy?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 8 Diffusion Model Part- 2/Lec 50.pdf"
+  },
+  {
+    "unit_id": 83,
+    "unit_title": "Week 9 Sequential Models to Transformers",
+    "lesson_title": "Week 9 Lecture Material",
+    "url": "https://drive.google.com/drive/folders/1YDw5bcDkOEY8fIfX5YTRCrCXJUIUNSMd?usp=sharing",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs95/Week 9 Sequential Models to Transformers/Lec 54.pdf"
+  }
+]

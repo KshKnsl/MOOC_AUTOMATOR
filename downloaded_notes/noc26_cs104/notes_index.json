@@ -1,0 +1,53 @@
+[
+  {
+    "unit_id": 20,
+    "unit_title": "Week 1: Foundations",
+    "lesson_title": "Week 1 : Assignment Solution 1",
+    "url": "https://drive.google.com/open?id=1AKzdOJEdy5Vj4LPZS1Uy1rruaJSVOXwl"
+  },
+  {
+    "unit_id": 24,
+    "unit_title": "Week 2: Deep Learning Basics",
+    "lesson_title": "Week 2 : Assignment Solution 2",
+    "url": "https://drive.google.com/open?id=1XozEYZtSx3mDt1HzGeJ_bP-xnd4z6CtL"
+  },
+  {
+    "unit_id": 36,
+    "unit_title": "Week 3: Deep Sequential Learning",
+    "lesson_title": "Week 3 : Assignment Solution 3",
+    "url": "https://drive.google.com/open?id=1t-eouHSlzw84mJ5CE0AYAF_EDAQyZsJp"
+  },
+  {
+    "unit_id": 44,
+    "unit_title": "Week 4: Deep Sequential Learning - II",
+    "lesson_title": "Week 4 : Assignment Solution 4",
+    "url": "https://drive.google.com/file/d/1AFKv9KTu6nqtfdW6Lc_85VxlvBQ2UAnK/view",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs104/Week 4_ Deep Sequential Learning - II/W4-Solution-NPTEL-Assignments-GenAI_CV - SUKLAV GHOSH.pdf"
+  },
+  {
+    "unit_id": 57,
+    "unit_title": "Week 5: Introduction to Generative AI",
+    "lesson_title": "Week 5 : Assignment Solution 5",
+    "url": "https://drive.google.com/file/d/1z4gJUefNSlcnNIVAa2Ky5bIEyseo7kvh/view",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs104/Week 5_ Introduction to Generative AI/Solution-NPTEL-Assignments-GenAI_CV - SUKLAV GHOSH.pdf"
+  },
+  {
+    "unit_id": 67,
+    "unit_title": "Week 6: Auto-regressive models, Transformers",
+    "lesson_title": "Week 6 : Assignment Solution 6",
+    "url": "https://drive.google.com/open?id=1nDdVOWlAnahNaud0xnzeT36WeroBDS3J"
+  },
+  {
+    "unit_id": 75,
+    "unit_title": "Week 7: Auto-regressive models, Transformers",
+    "lesson_title": "Week 7 : Assignment Solution 7",
+    "url": "https://drive.google.com/file/d/1lRiUMRCV1X9YbWQK8ODoYxZMWGxabzIC/view",
+    "local_path": "/Users/kushkansal/Personal/Developer/nptel-automate-main/downloaded_notes/noc26_cs104/Week 7_ Auto-regressive models, Transformers/Assignment 7 - SUKLAV GHOSH.pdf"
+  },
+  {
+    "unit_id": 50,
+    "unit_title": "Lecture Notes",
+    "lesson_title": "Lecture Notes",
+    "url": "https://drive.google.com/drive/folders/1y4J0zQrRxabiIIC7fFdubOpb8121ZiMn?usp=sharing"
+  }
+]
